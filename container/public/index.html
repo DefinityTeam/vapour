@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Definity Vapour Client Area</title>
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
+            body {
+                font-family: Poppins;
+            }
+
+            input {
+                background-color: #1f2225;
+                color:white;
+            }
+
+            div {
+                background-color: #15171a;
+            }
+
+            .submitButton {
+                background: #ff4e4e;border: 1px solid white;font-size: 120%;
+                border-radius: 3px;
+                transition: 0.5s;
+            }
+
+            .submitButton:hover {
+                background: #d93838
+            }
+        </style>
+    </head>
+
+    <body style="background: #0C0E10;color: white;">
+        <center>
+
+        <div style="color: white;border-radius: 10px;border: 1px solid gray;width: 20%;">
+            <h1>Login</h1>
+            <form action="dashboard" method="post">
+                <input type="text" name="username">
+                <br>
+                <input type="password" name="password">
+                <br> <br>
+                <input class="submitButton" type="submit" value="Submit">
+            </form>
+            <br>
+        </div>
+
+    </center>
+    </body>
+</html>

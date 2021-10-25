@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Definity Vapour Client Area</title>
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
+            body {
+                font-family: Poppins;
+            }
+
+            .dashboardOption {
+                height: 50%;
+                width: 20%;
+                border: 1px solid grey;
+                padding-left: 10px;
+                float: left;
+                margin-right: 10px;
+                margin-bottom: 10px;
+            }
+
+            a {
+                text-decoration: none;
+                color: white;
+            }
+
+            .submitButton {
+                background: #ff4e4e;border: 1px solid white;font-size: 120%;
+                border-radius: 3px;
+                transition: 0.5s;
+                color: white;
+            }
+
+            .submitButton:hover {
+                background: #d93838
+            }
+        </style>
+    </head>
+
+    <body style="background: #0C0E10;color: white;">
+        <form method="post" action="/dashboard">
+            <input type="hidden" name="username" value="hi">
+            <input type="hidden" name="password" value="hi">
+            <input type="submit" value="Back to Client Area" class="submitButton">
+        </form>
+        <h1>File Viewer</h1>
+        <hr style="color:white;">
+        <form method="post" action="/download">
+        <input type="submit" class="submitButton" value="Download">
+        <a href="/dashboard/upload"><button type="button" class="submitButton">Upload</button></a>
+        <button type="button" class="submitButton">Remove</button>
+
+        
+        
+        <br><br>
+        <!-- THIS IS INTENTIONALLY NOT ENDED. THE SERVER FILLS THIS. -->
