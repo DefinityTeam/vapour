@@ -2,6 +2,7 @@ const child_process = require('child_process');
 const express = require('express');
 const fs = require('fs');
 const fetch = require('node-fetch');
+const sha256 = require('js-sha256').sha256;
 require('dotenv').config();
 //import fetch from "node-fetch";
 
@@ -90,7 +91,7 @@ app.post('/createContainer', async (req, res) => {
 
                     
 
-                    fs.writeFileSync(`storage-container-${identifier}/.env`, `PORT=${port}\nUSERNAME=8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4\nPASSWORD=8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4`);
+                    fs.writeFileSync(`storage-container-${identifier}/.env`, `PORT=${port}\nUSERNAME=${sha256(req.body.username)}\nPASSWORD=${sha256(req.body.password)}`);
 
                     fs.appendFileSync('createContainer.sh', `cd storage-container-${identifier}\n`);
                     fs.appendFileSync('createContainer.sh', `git clone https://github.com/DefinityTeam/vapour \n`);
@@ -98,7 +99,7 @@ app.post('/createContainer', async (req, res) => {
                     fs.appendFileSync('createContainer.sh', `rm -rf vapour`)
                     
                     fs.writeFileSync('startContainer.sh', `cd storage-container-${identifier}\n`);
-                    fs.appendFileSync('startContainer.sh', `pm2 start index.js`);
+                    fs.appendFileSync('startContainer.sh', `pm2 start index.js -n "storage-container-${identifier} @ ${port}"`);
 
                     console.log('create container');
                     child_process.execSync('bash ./createContainer.sh');

@@ -3,7 +3,7 @@ const express = require("express");
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const sha256 = require('js-sha256').sha256;
-const { XOR } = require('./util');
+const { XOR } = require('../util');
 const JSZip = require('jszip');
 const { basename } = require('path');
 
