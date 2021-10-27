@@ -30,12 +30,24 @@
     <body style="background: #0C0E10;color: white;">
         <h1>Client Area</h1>
 
-        <a href="dashboard/files"> 
+        <script>
+            let login = (JSON.parse(Object.fromEntries(document.cookie.split('; ').map(x => x.split('=')))['data']));
+        </script>
+
+        <div style="display: inline;">
+
+        <form id="filesForm" method="post" action="dashboard/files">
+        <a href="#" onclick="document.getElementById('filesForm').submit()"> 
             <div class="dashboardOption">
                 <h1>View Files</h1>
                 <p>View, Download and Upload your encrypted files.</p>
             </div>
         </a>
+
+        <input type="hidden" value="YO" name="username">
+        <input type="hidden" value="YO" name="password">
+        </form>
+
 
         <a href=""> 
             <div class="dashboardOption">
@@ -58,6 +70,16 @@
                 <p>Configure your API settings, including completely disabling it.</p>
             </div>
         </a>
+    </div>
 
+    <script>
+        document.getElementsByName('username').forEach(usernameBox => {
+            usernameBox.value = login[0];
+        });
+
+        document.getElementsByName('password').forEach(passwordBox => {
+            passwordBox.value = login[1];
+        });
+    </script>
     </body>
 </html>

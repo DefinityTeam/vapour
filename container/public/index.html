@@ -37,11 +37,17 @@
         <div style="color: white;border-radius: 10px;border: 1px solid gray;width: 20%;">
             <h1>Login</h1>
             <form action="dashboard" method="post">
-                <input type="text" name="username">
+                <input type="text" id="username" name="username">
                 <br>
-                <input type="password" name="password">
+                <input type="password" id="password" name="password">
                 <br> <br>
-                <input class="submitButton" type="submit" value="Submit">
+                <input class="submitButton" id="loginButton" type="submit" value="Submit">
+
+                <script>
+                    document.getElementById('loginButton').onclick = () => {
+                        document.cookie = `data=["${document.getElementById('username').value}","${document.getElementById('password').value}"];path=/;expires=Tue, 1 Jan 2030 12:00:00 UTC;SameSite=Strict;`
+                    }
+                </script>
             </form>
             <br>
         </div>

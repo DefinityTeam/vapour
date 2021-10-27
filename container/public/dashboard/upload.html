@@ -33,6 +33,11 @@
     </head>
 
     <body style="background: #0C0E10;color: white;">
+        <form method="post" action="/dashboard/files">
+            <input type="hidden" name="username" value="hi">
+            <input type="hidden" name="password" value="hi">
+            <input type="submit" value="Back to Files" class="submitButton">
+        </form>
         <!--
         <form method="post" action="/upload">
             <input name="f" type="file">
@@ -60,6 +65,15 @@
                 reader.readAsDataURL(f);
                 //reader.readAsText(f);
             }))).then(d => console.log(d) || fetch('/upload', { method: 'POST', body: d.map(x => x.join('=')).join('&'), headers: { 'content-type': 'application/x-www-form-urlencoded' } }).then(response => console.log(response)));
+
+            let login = (JSON.parse(Object.fromEntries(document.cookie.split('; ').map(x => x.split('=')))['data']));
+                document.getElementsByName('username').forEach(usernameBox => {
+                usernameBox.value = login[0];
+            });
+
+            document.getElementsByName('password').forEach(passwordBox => {
+                passwordBox.value = login[1];
+            });
         </script>
     </body>
 </html>

@@ -33,7 +33,20 @@ app.post('/dashboard', (req, res) => {
     }
 });
 
-app.get('/dashboard/files', (req, res) => {
+app.get('/dashboard/*', (req, res) => {
+    res
+    .status(403)
+    .send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
+    
+})
+
+app.post('/dashboard/files', (req, res) => {
+    if (!(req.body.username && req.body.password && req.body.username.length > 2 && req.body.password.length > 2 && sha256(req.body.username) == process.env.USERNAME && sha256(req.body.password) == process.env.PASSWORD)) {
+        return res
+        .status(403)
+        .send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
+    }
+
     toSend = fs.readFileSync('./public/dashboard/files.html', 'utf-8');
     toSend += '<span>';
 
@@ -87,8 +100,15 @@ app.post('/upload', (req, res) => {
     res.send('ratio');
 });
 
-app.get('/dashboard/upload', (req, res) => {
+app.post('/dashboard/upload', (req, res) => {
+    if (!(req.body.username && req.body.password && req.body.username.length > 2 && req.body.password.length > 2 && sha256(req.body.username) == process.env.USERNAME && sha256(req.body.password) == process.env.PASSWORD)) {
+        return res
+        .status(403)
+        .send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
+    }
+    
     res.send(fs.readFileSync('./public/dashboard/upload.html', 'utf-8'));
+    
 });
 
 app.post('/postAny', (req, res) => {
