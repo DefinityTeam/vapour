@@ -34,9 +34,9 @@ app.post('/dashboard', (req, res) => {
 });
 
 app.get('/dashboard/*', (req, res) => {
-    res
-    .status(403)
-    .send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
+    return res
+    .status(405)
+    .send('<center><h1>405 Method Not Allowed</h1><hr><p>vapour-server</p></center>');
     
 })
 
@@ -111,6 +111,22 @@ app.post('/dashboard/upload', (req, res) => {
     
 });
 
+app.post('/dashboard/options', (req, res) => {
+    if (!(req.body.username && req.body.password && req.body.username.length > 2 && req.body.password.length > 2 && sha256(req.body.username) == process.env.USERNAME && sha256(req.body.password) == process.env.PASSWORD)) {
+        return res
+        .status(403)
+        .send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
+    }
+
+    res.send(fs.readFileSync('./public/dashboard/options.html', 'utf-8'));
+});
+
+app.post('/options', (req, res) => {
+    if (Object.entries(req.body).length) return res
+    .status(400)
+    .send('<center><h1>400 Bad Request</h1><hr><p>vapour-server</p></center>');
+});
+
 app.post('/postAny', (req, res) => {
     console.log(req.body);
 });
@@ -123,6 +139,6 @@ app.get('*', (req, res) => {
     res
     .status(404)
     .send('<center><h1>404 Not Found</h1><hr><p>vapour-server</p></center>');
-})
+});
 
 app.listen(process.env.PORT, () => {console.log(`Online at ${process.env.PORT}`)});
