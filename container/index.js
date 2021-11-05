@@ -121,15 +121,12 @@ app.post('/dashboard/options', (req, res) => {
     res.send(fs.readFileSync('./public/dashboard/options.html', 'utf-8'));
 });
 
-<<<<<<< HEAD
-=======
 app.post('/options', (req, res) => {
     if (Object.entries(req.body).length) return res
     .status(400)
     .send('<center><h1>400 Bad Request</h1><hr><p>vapour-server</p></center>');
 });
 
->>>>>>> 66bc422016bc063b9d276797f1de798a6d54fc65
 app.post('/postAny', (req, res) => {
     console.log(req.body);
 });
