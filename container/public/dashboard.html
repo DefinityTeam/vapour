@@ -24,6 +24,10 @@
                 text-decoration: none;
                 color: white;
             }
+
+            form {
+                display:inline;
+            }
         </style>
     </head>
 
@@ -49,12 +53,16 @@
         </form>
 
 
-        <a href=""> 
+        <form id="optionsForm" method="post" action="dashboard/options">
+        <a href="#" onclick="document.getElementById('optionsForm').submit()"> 
             <div class="dashboardOption">
                 <h1>Options</h1>
                 <p>Restrict IPs, check logs, change your passwords etc.</p>
             </div>
         </a>
+        <input type="hidden" value="YO" name="username">
+        <input type="hidden" value="YO" name="password">
+        </form>
 
         <a href=""> 
             <div class="dashboardOption">
