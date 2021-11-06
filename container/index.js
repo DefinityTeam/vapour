@@ -6,11 +6,29 @@ const sha256 = require('js-sha256').sha256;
 const { XOR } = require('../util');
 const JSZip = require('jszip');
 const { basename } = require('path');
-
 const app = express();
 app.use(require('body-parser').urlencoded({ extended: false, limit: '696969tb' }));
 
+function checkIP(intake) {
+    console.log(process.env.IPLIST)
+    ipArray = JSON.parse(process.env.IPLIST);
+    switch (process.env.IPTYPE) {
+        case 'BLOCKSPECIFIC':
+            if (ipArray.includes(intake)) return true;
+        break; 
+
+        case 'BLOCKALL':
+            if (!ipArray.includes(intake)) return true;
+        break; 
+
+        default:
+            return false;
+    }
+} 
+
 app.get('/', (req, res) => {
+    if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
+    console.log(req.header('x-forwarded-for') || req.connection.remoteAddress);
     res.send(fs.readFileSync('./public/index.html', 'utf-8'));
 });
 
@@ -141,9 +159,9 @@ app.post('/options', (req, res) => {
                     .send('<center><h1>400 Bad Request</h1><hr><p>vapour-server</p></center>');
                 }
                 process.env.IPTYPE = 'BLOCKSPECIFIC';
-                process.env.IPLIST = '[' + req.body['ipList'].split(' ').join(',') + ']';
+                process.env.IPLIST = JSON.stringify(req.body['ipList'].split(' '));
                 envFile[3] = 'IPTYPE=BLOCKSPECIFIC';
-                envFile[4] = 'IPLIST=[' + req.body['ipList'].split(' ').join(',') + ']';
+                envFile[4] = 'IPLIST=' + JSON.stringify(req.body['ipList'].split(' '));
                 
             break;
             case 'blockAll':
@@ -153,9 +171,13 @@ app.post('/options', (req, res) => {
                     .send('<center><h1>400 Bad Request</h1><hr><p>vapour-server</p></center>');
                 }
                 process.env.IPTYPE = 'BLOCKALL';
-                process.env.IPLIST = '[' + req.body['ipList'].split(' ').join(',') + ']';
+                process.env.IPLIST = JSON.stringify(req.body['ipList'].split(' '));
                 envFile[3] = 'IPTYPE=BLOCKALL';
-                envFile[4] = 'IPLIST=[' + req.body['ipList'].split(' ').join(',') + ']';
+
+                //let newIpList = req.body['ipList'].split(' ').s(x => x = '\"' + x + '\"');
+                //console.log(newIpList);
+
+                envFile[4] = 'IPLIST=' + JSON.stringify(req.body['ipList'].split(' '));
             break;
             default:
                 null;
