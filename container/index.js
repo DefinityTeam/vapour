@@ -122,9 +122,63 @@ app.post('/dashboard/options', (req, res) => {
 });
 
 app.post('/options', (req, res) => {
-    if (Object.entries(req.body).length) return res
+    if (!Object.entries(req.body).length) return res
     .status(400)
     .send('<center><h1>400 Bad Request</h1><hr><p>vapour-server</p></center>');
+
+    envFile = fs.readFileSync('.env', 'utf8').split('\n');
+
+    if (req.body['ipType']) {
+        switch (req.body['ipType']) {
+            case 'allowAll':
+                process.env.IPTYPE = 'ALLOWALL';
+                envFile[3] = 'IPTYPE=ALLOWALL';
+            break;
+            case 'blockSpecific':
+                if (!req.body['ipList']) {
+                    return res
+                    .status(400)
+                    .send('<center><h1>400 Bad Request</h1><hr><p>vapour-server</p></center>');
+                }
+                process.env.IPTYPE = 'BLOCKSPECIFIC';
+                process.env.IPLIST = '[' + req.body['ipList'].split(' ').join(',') + ']';
+                envFile[3] = 'IPTYPE=BLOCKSPECIFIC';
+                envFile[4] = 'IPLIST=[' + req.body['ipList'].split(' ').join(',') + ']';
+                
+            break;
+            case 'blockAll':
+                if (!req.body['ipList']) {
+                    return res
+                    .status(400)
+                    .send('<center><h1>400 Bad Request</h1><hr><p>vapour-server</p></center>');
+                }
+                process.env.IPTYPE = 'BLOCKALL';
+                process.env.IPLIST = '[' + req.body['ipList'].split(' ').join(',') + ']';
+                envFile[3] = 'IPTYPE=BLOCKALL';
+                envFile[4] = 'IPLIST=[' + req.body['ipList'].split(' ').join(',') + ']';
+            break;
+            default:
+                null;
+        }
+    }
+
+    if (req.body['oldPassword'] && req.body['newPassword']) {
+        if (sha256(req.body['oldPassword']) == process.env.PASSWORD) {
+            process.env.PASSWORD = sha256(req.body['newPassword']);
+            envFile[2] = 'PASSWORD=' + sha256(req.body['newPassword']);
+        } else {
+            return res
+            .status(400)
+            .send('<center><h1>400 Bad Request</h1><hr><p>vapour-server</p></center>');
+        }
+    }
+
+    fs.writeFileSync('.env', envFile.join('\n'));
+    try {
+        res.send('success');
+    } catch(e) {
+        return;
+    }
 });
 
 app.post('/postAny', (req, res) => {

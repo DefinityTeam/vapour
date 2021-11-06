@@ -66,7 +66,7 @@
         <!-- <div style="display: inline;">
         </div> -->
 
-        <form method="post" action="dashboard/optionsSubmit">
+        <form method="post" action="/options">
             <span style="font-size:larger;">IP Restriction</span><br>
             <input type="radio" id="ipAllowAll" value="allowAll" name="ipType">
             <label for="ipAllowAll">Allow All IPs</label> <br>
@@ -88,6 +88,8 @@
             <span style="font-size:larger;">Change Password</span><br>
             Current Password <input style="background-color: black;color:white;" type="password" name="oldPassword"> <br>
             New Password <input style="background-color: black;color:white;" type="password" name="newPassword">
+            <br><br>
+            <input type="submit" class="submitButton" value="Submit">
         </form>
     </body>
 
