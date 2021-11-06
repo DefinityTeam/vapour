@@ -10,7 +10,7 @@ const app = express();
 app.use(require('body-parser').urlencoded({ extended: false, limit: '696969tb' }));
 
 function checkIP(intake) {
-    console.log(process.env.IPLIST)
+    //console.log(process.env.IPLIST)
     ipArray = JSON.parse(process.env.IPLIST);
     switch (process.env.IPTYPE) {
         case 'BLOCKSPECIFIC':
@@ -33,12 +33,14 @@ app.get('/', (req, res) => {
 });
 
 app.get('/dashboard', (req, res) => {
+    if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
     res
     .status(403)
     .send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
 });
 
 app.post('/dashboard', (req, res) => {
+    if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
     //res.json(req.body);
     //console.log(req.body);
     // console.log([process.env.USERNAME, process.env.PASSWORD]);
@@ -52,6 +54,7 @@ app.post('/dashboard', (req, res) => {
 });
 
 app.get('/dashboard/*', (req, res) => {
+    if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
     return res
     .status(405)
     .send('<center><h1>405 Method Not Allowed</h1><hr><p>vapour-server</p></center>');
@@ -59,6 +62,7 @@ app.get('/dashboard/*', (req, res) => {
 });
 
 app.post('/dashboard/files', (req, res) => {
+    if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
     if (!(req.body.username && req.body.password && req.body.username.length > 2 && req.body.password.length > 2 && sha256(req.body.username) == process.env.USERNAME && sha256(req.body.password) == process.env.PASSWORD)) {
         return res
         .status(403)
@@ -90,6 +94,7 @@ app.post('/dashboard/files', (req, res) => {
 });
 
 app.post('/download', async (req, res) => {
+    if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
     const zip = new JSZip();
     for (const path of Object.entries(req.body)) {
         if (path[0] == "encryption_key") continue;
@@ -101,6 +106,7 @@ app.post('/download', async (req, res) => {
 });
 
 app.post('/upload', (req, res) => {
+    if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
     //console.log(req.body);
     let test = {}
     Object.entries(req.body).forEach(f => {
@@ -119,6 +125,7 @@ app.post('/upload', (req, res) => {
 });
 
 app.post('/dashboard/upload', (req, res) => {
+    if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
     if (!(req.body.username && req.body.password && req.body.username.length > 2 && req.body.password.length > 2 && sha256(req.body.username) == process.env.USERNAME && sha256(req.body.password) == process.env.PASSWORD)) {
         return res
         .status(403)
@@ -130,6 +137,7 @@ app.post('/dashboard/upload', (req, res) => {
 });
 
 app.post('/dashboard/options', (req, res) => {
+    if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
     if (!(req.body.username && req.body.password && req.body.username.length > 2 && req.body.password.length > 2 && sha256(req.body.username) == process.env.USERNAME && sha256(req.body.password) == process.env.PASSWORD)) {
         return res
         .status(403)
@@ -140,6 +148,7 @@ app.post('/dashboard/options', (req, res) => {
 });
 
 app.post('/options', (req, res) => {
+    if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
     if (!Object.entries(req.body).length) return res
     .status(400)
     .send('<center><h1>400 Bad Request</h1><hr><p>vapour-server</p></center>');
@@ -204,14 +213,17 @@ app.post('/options', (req, res) => {
 });
 
 app.post('/postAny', (req, res) => {
+    if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
     console.log(req.body);
 });
 
 app.get('/Poppins-Light.ttf', (req, res) => {
+    if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
     res.send(fs.readFileSync('./public/Poppins-Light.ttf', 'utf-8'));
 });
 
 app.get('*', (req, res) => {
+    if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
     res
     .status(404)
     .send('<center><h1>404 Not Found</h1><hr><p>vapour-server</p></center>');
