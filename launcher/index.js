@@ -107,7 +107,7 @@ app.post('/createContainer', async (req, res) => {
                     child_process.execSync('bash ./startContainer.sh');
                     console.log('ok');
                     done = true;  
-                    res.json( { type: 'success', port: port, address: `vps-fr.sudocode1.xyz:${port}` } );
+                    res.json( { type: 'success', port: port, address: `services-fr-01.definityteam.com:${port}` } );
                 }
             }
 
