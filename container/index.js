@@ -43,13 +43,17 @@ app.post('/dashboard', (req, res) => {
     if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
     //res.json(req.body);
     //console.log(req.body);
-    // console.log([process.env.USERNAME, process.env.PASSWORD]);
+    // console.log([process.env.LOGIN, process.env.PASSWORD]);
     // console.log([sha256(req.body.username), sha256(req.body.password)]);
 
-    if ((process.env.USERNAME == sha256(req.body.username)) && (process.env.PASSWORD == sha256(req.body.password))) {
+    //console.log( process.env.LOGIN, sha256(req.body.username), process.env.PASSWORD, sha256(req.body.password) )
+
+    if ((process.env.LOGIN == sha256(req.body.username)) && (process.env.PASSWORD == sha256(req.body.password))) {
         res.send(fs.readFileSync('./public/dashboard.html', 'utf-8'));
+        fs.appendFileSync('./private/accesslogs.txt', `successful dashboard access at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}\n`)
     } else {
         res.send('incorrect details');
+        fs.appendFileSync('./private/accesslogs.txt', `failed dashboard access at ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}\n`)
     }
 });
 
@@ -63,7 +67,7 @@ app.get('/dashboard/*', (req, res) => {
 
 app.post('/dashboard/files', (req, res) => {
     if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
-    if (!(req.body.username && req.body.password && req.body.username.length > 2 && req.body.password.length > 2 && sha256(req.body.username) == process.env.USERNAME && sha256(req.body.password) == process.env.PASSWORD)) {
+    if (!(req.body.username && req.body.password && req.body.username.length > 2 && req.body.password.length > 2 && sha256(req.body.username) == process.env.LOGIN && sha256(req.body.password) == process.env.PASSWORD)) {
         return res
         .status(403)
         .send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
@@ -126,7 +130,7 @@ app.post('/upload', (req, res) => {
 
 app.post('/dashboard/upload', (req, res) => {
     if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
-    if (!(req.body.username && req.body.password && req.body.username.length > 2 && req.body.password.length > 2 && sha256(req.body.username) == process.env.USERNAME && sha256(req.body.password) == process.env.PASSWORD)) {
+    if (!(req.body.username && req.body.password && req.body.username.length > 2 && req.body.password.length > 2 && sha256(req.body.username) == process.env.LOGIN && sha256(req.body.password) == process.env.PASSWORD)) {
         return res
         .status(403)
         .send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
@@ -138,7 +142,7 @@ app.post('/dashboard/upload', (req, res) => {
 
 app.post('/dashboard/options', (req, res) => {
     if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
-    if (!(req.body.username && req.body.password && req.body.username.length > 2 && req.body.password.length > 2 && sha256(req.body.username) == process.env.USERNAME && sha256(req.body.password) == process.env.PASSWORD)) {
+    if (!(req.body.username && req.body.password && req.body.username.length > 2 && req.body.password.length > 2 && sha256(req.body.username) == process.env.LOGIN && sha256(req.body.password) == process.env.PASSWORD)) {
         return res
         .status(403)
         .send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
@@ -210,6 +214,18 @@ app.post('/options', (req, res) => {
     } catch(e) {
         return;
     }
+});
+
+app.post('/dashboard/serviceconfig', (req, res) => {
+    if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
+    if (!(req.body.username && req.body.password && req.body.username.length > 2 && req.body.password.length > 2 && sha256(req.body.username) == process.env.LOGIN && sha256(req.body.password) == process.env.PASSWORD)) {
+        return res
+        .status(403)
+        .send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
+    }
+
+    fs.readFileSync('./private/accesslogs.txt', 'utf-8')
+    res.send(fs.readFileSync('./public/dashboard/serviceconfig.html', 'utf-8') + `<script>document.getElementById('logs').value = \`${fs.readFileSync('./private/accesslogs.txt', 'utf-8')}\`</script>`);
 });
 
 app.post('/postAny', (req, res) => {

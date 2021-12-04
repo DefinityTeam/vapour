@@ -64,12 +64,16 @@
         <input type="hidden" value="YO" name="password">
         </form>
 
-        <a href=""> 
+        <form method="post" id="serviceConfigForm" action="dashboard/serviceconfig">
+        <a href="#" onclick="document.getElementById('serviceConfigForm').submit()"> 
             <div class="dashboardOption">
                 <h1>Service Configuration</h1>
                 <p>Upgrade your plan, cancel your plan, request support etc.</p>
             </div>
         </a>
+        <input type="hidden" value="YO" name="username">
+        <input type="hidden" value="YO" name="password">
+        </form>
 
 
         <a href=""> 
