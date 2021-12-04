@@ -28,7 +28,7 @@ function checkIP(intake) {
 
 app.get('/', (req, res) => {
     if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
-    console.log(req.header('x-forwarded-for') || req.connection.remoteAddress);
+    //console.log(req.header('x-forwarded-for') || req.connection.remoteAddress);
     res.send(fs.readFileSync('./public/index.html', 'utf-8'));
 });
 
