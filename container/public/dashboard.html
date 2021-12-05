@@ -76,12 +76,16 @@
         </form>
 
 
-        <a href=""> 
-            <div class="dashboardOption">
-                <h1>Intergration</h1>
-                <p>Configure your API settings, including completely disabling it.</p>
-            </div>
-        </a>
+        <form method="post" id="intergrationForm" action="dashboard/intergration">
+            <a href="#" onclick="document.getElementById('intergrationForm').submit()"> 
+                <div class="dashboardOption">
+                    <h1>Intergration</h1>
+                    <p>Configure your API settings, including completely disabling it.</p>
+                </div>
+            </a>
+            <input type="hidden" value="YO" name="username">
+            <input type="hidden" value="YO" name="password">
+        </form>
     </div>
 
     <script>

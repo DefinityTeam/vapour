@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Definity Vapour Client Area</title>
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
+            body {
+                font-family: Poppins;
+            }
+
+            .dashboardOption {
+                height: 50%;
+                width: 20%;
+                border: 1px solid grey;
+                padding-left: 10px;
+                float: left;
+                margin-right: 10px;
+                margin-bottom: 10px;
+            }
+
+            a {
+                text-decoration: none;
+                color: white;
+            }
+
+            .submitButton {
+                background: #ff4e4e;border: 1px solid white;font-size: 120%;
+                border-radius: 3px;
+                transition: 0.5s;
+                color: white;
+                display: inline;
+            }
+
+            .submitButton:hover {
+                background: #d93838
+            }
+
+            form {
+                display:inline;
+            }
+
+            #logs {
+                background-color:black;
+                color:White;
+            }
+
+            #ipList {
+                background-color: black;
+                color:white;
+            }
+        </style>
+
+
+    </head>
+
+    <body style="background: #0C0E10;color: white;">
+        <form method="post" action="/dashboard">
+            <input type="hidden" name="username" value="hi">
+            <input type="hidden" name="password" value="hi">
+            <input type="submit" value="Back to Client Area" class="submitButton">
+        </form>
+        <h1>API Options</h1>
+        <hr style="color:white;">
+        <!-- <div style="display: inline;">
+        </div> -->
+
+        <form method="post" action="/options">
+            
+            <label>Require username and password on request: <input type="checkbox" id="reqPass" name="reqPass" checked></label> <br> <br>
+
+            <span style="font-size:larger;">Endpoint enable/disable</span><br>
+
+
+            <br><br>
+            <input type="submit" class="submitButton" value="Submit"> 
+            
+        </form>
+    </body>
+
+    <script>
+        let login = (JSON.parse(Object.fromEntries(document.cookie.split('; ').map(x => x.split('=')))['data']));
+        document.getElementsByName('username').forEach(usernameBox => {
+        usernameBox.value = login[0];
+    });
+
+    document.getElementsByName('password').forEach(passwordBox => {
+        passwordBox.value = login[1];
+    });
+    </script>
+</html>
