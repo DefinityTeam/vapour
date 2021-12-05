@@ -7,7 +7,13 @@ const { XOR } = require('../util');
 const JSZip = require('jszip');
 const { basename } = require('path');
 const app = express();
+
+const fileUpload = require('express-fileupload')
+
 app.use(require('body-parser').urlencoded({ extended: false, limit: '696969tb' }));
+app.use(fileUpload({
+    debug: true
+}));
 
 function checkIP(intake) {
     //console.log(process.env.IPLIST)
@@ -112,20 +118,38 @@ app.post('/download', async (req, res) => {
 app.post('/upload', (req, res) => {
     if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
     //console.log(req.body);
-    let test = {}
-    Object.entries(req.body).forEach(f => {
-        test[f[0]] = f[1];
-        //console.log(f, f[1]);
-        fs.writeFileSync(`./private/${f[0]}`, Buffer.from(f[1].split(',').slice(1).join(','), 'base64'));
-        //fs.writeFileSync(`./private/${f[0]}`, f[1].split(',').slice(1).join(','));
+    // let test = {}
+    // Object.entries(req.body).forEach(f => {
+    //     test[f[0]] = f[1];
+    //     //console.log(f, f[1]);
+    //     fs.writeFileSync(`./private/${f[0]}`, Buffer.from(f[1].split(',').slice(1).join(','), 'base64'));
+    //     //fs.writeFileSync(`./private/${f[0]}`, f[1].split(',').slice(1).join(','));
+    // });
+
+    // //console.log(test);
+
+    // for (const file in Object.entries(req.body)) {
+
+    // }
+
+
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send('No files were uploaded.');
+    }
+
+    // console.log(req.files);
+    console.log(req.files.f);
+
+
+    Object.entries(req.files.f).forEach(file => {
+        console.log(file);
+        file[1].mv('./private/' + file[1].name, (err) => {
+            if (err) return res.status(500).send(err);
+            
+        });
     });
 
-    //console.log(test);
-
-    for (const file in Object.entries(req.body)) {
-
-    }
-    res.send('ratio');
+    res.send('ok');
 });
 
 app.post('/dashboard/upload', (req, res) => {
