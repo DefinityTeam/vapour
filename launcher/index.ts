@@ -1,10 +1,10 @@
-const child_process = require('child_process');
-const express = require('express');
-const fs = require('fs');
-const fetch = require('node-fetch');
-const sha256 = require('js-sha256').sha256;
 require('dotenv').config();
-//import fetch from "node-fetch";
+
+import { execSync, spawn } from 'child_process';
+import express from 'express';
+import fs from 'fs';
+import sha256 from 'js-sha256';
+import fetch from "node-fetch";
 
 let app = express();
 app.listen(8080);
@@ -26,13 +26,13 @@ app.get('/',  (req, res) => {
 });
 
 app.get('/getStats', (req, res) => {
-    let size = child_process.spawn('sudo', ['du', '-sh', '/']);
+    let size = spawn('sudo', ['du', '-sh', '/']);
     size.stdout.on('data', function (data) {
         console.log('size: ' + data);
         console.log([data.toString()]);
         //res.send('order complete: ' + data.toString().split('\t/')[0]);
         res.status(200);
-        res.json( { usedStorage: parseInt(data.toString().split('\t/')[0]), cappedStorage: parseInt(process.env.AVAILABLE_STORAGE_IN_GIGABYTES) } );
+        res.json( { usedStorage: parseInt(data.toString().split('\t/')[0]), cappedStorage: parseInt(process.env['AVAILABLE_STORAGE_IN_GIGABYTES']!) } );
     });
 });
 
@@ -46,10 +46,12 @@ app.post('/createContainer', async (req, res) => {
     let ok = authA && authB && authC && gb && usernameExist && passwordExist;
     console.log([authA, authB, authC, gb, usernameExist, passwordExist])
 
+    console.log(process.env.AUTH_A, req.body.authentication_token_a)
+
     console.log(ok);
 
     if (ok) {
-        let size = child_process.spawn('sudo', ['du', '-sh', '/']);
+        let size = spawn('sudo', ['du', '-sh', '/home/me']);
         size.stdout.on('data', async function (data) {
             console.log('size: ' + data);
             console.log([data.toString()]);
@@ -78,7 +80,7 @@ app.post('/createContainer', async (req, res) => {
                         //console.log(testPort);
                         try {
                             // (async() => {
-                                await fetch('http://0.0.0.0:' + testPort)
+                                await fetch('http://0.0.0.0:' + testPort, {})
                                 .then(res => res.text())
                                 .then(body => console.log(body));
                             // })();
@@ -91,7 +93,7 @@ app.post('/createContainer', async (req, res) => {
 
                     
 
-                    fs.writeFileSync(`storage-container-${identifier}/.env`, `PORT=${port}\nUSERNAME=${sha256(req.body.username)}\nPASSWORD=${sha256(req.body.password)}`);
+                    fs.writeFileSync(`storage-container-${identifier}/.env`, `PORT=${port}\nLOGIN=${sha256.sha256(req.body.username)}\nPASSWORD=${sha256.sha256(req.body.password)}\nIPLIST=[]\nIPTYPE=ALLOWALL`);
 
                     fs.appendFileSync('createContainer.sh', `cd storage-container-${identifier}\n`);
                     fs.appendFileSync('createContainer.sh', `git clone https://github.com/DefinityTeam/vapour \n`);
@@ -102,9 +104,9 @@ app.post('/createContainer', async (req, res) => {
                     fs.appendFileSync('startContainer.sh', `pm2 start index.js -n "storage-container-${identifier} @ ${port}"`);
 
                     console.log('create container');
-                    child_process.execSync('bash ./createContainer.sh');
+                    execSync('bash ./createContainer.sh');
                     console.log('start container');
-                    child_process.execSync('bash ./startContainer.sh');
+                    execSync('bash ./startContainer.sh');
                     console.log('ok');
                     done = true;  
                     res.json( { type: 'success', port: port, address: `services-fr-01.definityteam.com:${port}` } );
