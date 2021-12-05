@@ -43,6 +43,16 @@ body {
     flex-flow: row wrap;
 }
 
+.faqCont {
+    margin-top: 30px;
+    width: 100%;
+    /* display: flex;
+    justify-content: center;
+    flex-flow: row wrap; */
+    text-align: center;
+    background-color: #000000;
+}
+
 .pricing {
     padding: 20px;
     display: inline-block;
