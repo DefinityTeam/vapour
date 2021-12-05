@@ -1,2 +1,2 @@
-# vapour
-Definity Vapour: The best storage solution.
+# Definity Vapour
+Definity Vapour is the best storage solution.

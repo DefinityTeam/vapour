@@ -45,7 +45,7 @@
 
                 <script>
                     document.getElementById('loginButton').onclick = () => {
-                        document.cookie = `data=["${document.getElementById('username').value}","${document.getElementById('password').value}"];path=/;expires=Tue, 1 Jan 2030 12:00:00 UTC;SameSite=Strict;`
+                        document.cookie = `data=["${document.getElementById('username').value}","${document.getElementById('password').value}"];path=/;expires=Tue, 1 Jan 2030 12:00:00 UTC;SameSite=Strict;Secure;`
                     }
                 </script>
             </form>
