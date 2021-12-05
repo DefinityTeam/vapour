@@ -140,10 +140,10 @@ app.post('/upload', (req, res) => {
     // console.log(req.files);
     console.log(req.files.f);
 
-
-    Object.entries(req.files.f).forEach(file => {
-        console.log(file);
-        file[1].mv('./private/' + file[1].name, (err) => {
+    
+    (Array.isArray(req.files.f) ? req.files.f : [req.files.f]).forEach(file => {
+        //console.log(file);
+        file.mv('./private/' + file.name, (err) => {
             if (err) return res.status(500).send(err);
             
         });
