@@ -20,6 +20,12 @@ let ipArray;
 let toSend;
 let envFile;
 
+// this can be used later
+type StaticPages = Record<string, string>;
+let staticPages: StaticPages = {
+    
+}
+
 app.use(express.urlencoded({ extended: false, limit: "922337203685477580711000000000kb" }));
 app.use(fileUpload({ debug: false }));
 
@@ -108,6 +114,13 @@ app.post('/dashboard/:page', (req: Request, res: Response) => {
                 if (err) { res.status(404).send('<center><h1>404 Not Found</h1><hr><p>vapour-server</p></center>'); };
                 fs.readFile(`./public/dashboard/${req.params['page']}.html`, 'utf8', (err, data) => { res.send(data); });
             });
+
+            // this is broken but we can fix it later
+            // if (staticPages[req.params.page]) {
+            //     res.send(staticPages[req.params.page]);
+            // } else {
+            //     return res.status(404).send('<center><h1>404 Not Found</h1><hr><p>vapour-server</p></center>');
+            // }
         
     }
 })
