@@ -154,6 +154,27 @@ app.post('/upload', (req: Request, res: Response) => {
     res.send('ok'); // make this redirect back to dash at some point (roux do this not jb)
 });
 
+app.post('/remove', (req: Request, res: Response) => {
+    // implement later
+    // if (!(req.body['username'] && req.body['password'] && req.body['username'].length > 2 && req.body['password'].length > 2 && sha256(req.body['username']) == process.env['LOGIN'] && sha256(req.body['password']) == process.env['PASSWORD'])) { 
+    //     return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
+    // }
+
+    for (const path of Object.entries(req.body)) {
+        if (path[0] == "password") continue;
+        if (path[0] == "username") continue;
+
+        try {
+            fs.rmSync('./private/' + path[0]);
+            res.status(200).send('success');
+        } catch(e) {
+            res.status(500).send('deletion error');
+            console.log(e);
+        }
+
+    }
+});
+
 app.post('/api/file/:file', (req: Request, res: Response) => {
     try {
         res.status(200).sendFile(require('path').join(process.cwd(), 'private/' + req.params.file));

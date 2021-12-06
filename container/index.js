@@ -54,6 +54,7 @@ var fileUpload = require('express-fileupload');
 var ipArray;
 var toSend;
 var envFile;
+var staticPages = {};
 app.use(express.urlencoded({ extended: false, limit: "922337203685477580711000000000kb" }));
 app.use(fileUpload({ debug: false }));
 function checkIP(intake) {
@@ -148,6 +149,12 @@ app.post('/dashboard/:page', function (req, res) {
                 ;
                 fs.readFile("./public/dashboard/".concat(req.params['page'], ".html"), 'utf8', function (err, data) { res.send(data); });
             });
+        // this is broken but we can fix it later
+        // if (staticPages[req.params.page]) {
+        //     res.send(staticPages[req.params.page]);
+        // } else {
+        //     return res.status(404).send('<center><h1>404 Not Found</h1><hr><p>vapour-server</p></center>');
+        // }
     }
 });
 app.post('/download', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
@@ -184,6 +191,27 @@ app.post('/upload', function (req, res) {
         });
     });
     res.send('ok'); // make this redirect back to dash at some point (roux do this not jb)
+});
+app.post('/remove', function (req, res) {
+    // implement later
+    // if (!(req.body['username'] && req.body['password'] && req.body['username'].length > 2 && req.body['password'].length > 2 && sha256(req.body['username']) == process.env['LOGIN'] && sha256(req.body['password']) == process.env['PASSWORD'])) { 
+    //     return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
+    // }
+    for (var _i = 0, _a = Object.entries(req.body); _i < _a.length; _i++) {
+        var path = _a[_i];
+        if (path[0] == "password")
+            continue;
+        if (path[0] == "username")
+            continue;
+        try {
+            fs.rmSync('./private/' + path[0]);
+            res.status(200).send('success');
+        }
+        catch (e) {
+            res.status(500).send('deletion error');
+            console.log(e);
+        }
+    }
 });
 app.post('/api/file/:file', function (req, res) {
     try {

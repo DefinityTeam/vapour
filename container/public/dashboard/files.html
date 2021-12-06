@@ -61,10 +61,10 @@
             <input name="username" type="hidden">
             <input name="password" type="hidden">
         </form>
-        <button type="button" class="submitButton">Remove</button>
+        <button type="button" class="submitButton" onclick="document.getElementById('filesForm').action = '/remove';document.getElementById('filesForm').submit()">Remove</button>
 
 
-        <form method="post" action="/download">
+        <form method="post" action="/download" id="filesForm">
             <input type="submit" class="submitButton" value="Download" style="float:right;">
         </div>
 
