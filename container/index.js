@@ -57,6 +57,7 @@ var envFile;
 app.use(express.urlencoded({ extended: false, limit: "922337203685477580711000000000kb" }));
 app.use(fileUpload({ debug: false }));
 function checkIP(intake) {
+    intake = intake.replace('::ffff:', '');
     ipArray = JSON.parse(process.env['IPLIST']);
     switch (process.env['IPTYPE']) {
         case 'BLOCKSPECIFIC':
@@ -92,11 +93,11 @@ app.get('/dashboard', function (req, res) { res.status(403).send('<center><h1>40
 app.post('/dashboard', function (req, res) {
     if ((process.env['LOGIN'] == (0, js_sha256_1.sha256)(req.body.username)) && (process.env['PASSWORD'] == (0, js_sha256_1.sha256)(req.body.password))) {
         res.send(fs.readFileSync('./public/dashboard.html', 'utf-8'));
-        fs.appendFileSync('./private/accesslogs.txt', "successful dashboard access at " + new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString() + "\n");
+        fs.appendFileSync('./private/accesslogs.txt', "successful dashboard access at ".concat(new Date().toLocaleDateString(), " ").concat(new Date().toLocaleTimeString(), "\n"));
     }
     else {
         res.send('incorrect details');
-        fs.appendFileSync('./private/accesslogs.txt', "failed dashboard access at " + new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString() + "\n");
+        fs.appendFileSync('./private/accesslogs.txt', "failed dashboard access at ".concat(new Date().toLocaleDateString(), " ").concat(new Date().toLocaleTimeString(), "\n"));
     }
 });
 app.get('/dashboard/*', function (req, res) { return res.status(405).send('<center><h1>405 Method Not Allowed</h1><hr><p>vapour-server</p></center>'); });
@@ -112,11 +113,11 @@ app.post('/dashboard/:page', function (req, res) {
             var files_1 = "";
             fs.readdirSync('./private/').forEach(function (file) {
                 try {
-                    fs.readdirSync("./private/" + file);
-                    directories_1 += "<input type=\"checkbox\" onclick=\"return false;\" readonly=\"readonly\" disabled=\"disabled\" id=\"" + file + "\"><label for=\"" + file + "\"> " + file + "</label><br>";
+                    fs.readdirSync("./private/".concat(file));
+                    directories_1 += "<input type=\"checkbox\" onclick=\"return false;\" readonly=\"readonly\" disabled=\"disabled\" id=\"".concat(file, "\"><label for=\"").concat(file, "\"> ").concat(file, "</label><br>");
                 }
                 catch (e) {
-                    files_1 += "<input type=\"checkbox\" name=\"" + file + "\" id=\"" + file + "\"><label for=\"" + file + "\"> " + file + "</label><br>";
+                    files_1 += "<input type=\"checkbox\" name=\"".concat(file, "\" id=\"").concat(file, "\"><label for=\"").concat(file, "\"> ").concat(file, "</label><br>");
                 }
             });
             toSend += directories_1;
@@ -135,17 +136,17 @@ app.post('/dashboard/:page', function (req, res) {
                         res.status(500).send('<center><h1>500 Internal Server Error</h1><hr><p>vapour-server</p></center>');
                     }
                     ;
-                    res.send(pageData + "<script>document.getElementById('logs').value = `" + logData + "`</script>");
+                    res.send("".concat(pageData, "<script>document.getElementById('logs').value = `").concat(logData, "`</script>"));
                 });
             });
             break;
         default:
-            fs.access("./public/dashboard/" + req.params['page'] + ".html", fs.constants.R_OK, function (err) {
+            fs.access("./public/dashboard/".concat(req.params['page'], ".html"), fs.constants.R_OK, function (err) {
                 if (err) {
                     res.status(404).send('<center><h1>404 Not Found</h1><hr><p>vapour-server</p></center>');
                 }
                 ;
-                fs.readFile("./public/dashboard/" + req.params['page'] + ".html", 'utf8', function (err, data) { res.send(data); });
+                fs.readFile("./public/dashboard/".concat(req.params['page'], ".html"), 'utf8', function (err, data) { res.send(data); });
             });
     }
 });
@@ -159,7 +160,7 @@ app.post('/download', function (req, res) { return __awaiter(void 0, void 0, voi
                     path = _a[_i];
                     if (path[0] == "encryption_key")
                         continue; // REMOVE THIS PARAMETER ON CLIENT END IF USED. DO NOT DO THIS SERVER SIDE. WE WILL PROVIDE A DECRYPTION TOOL.
-                    zip.file((0, node_path_1.basename)(path[0]), fs.readFileSync("./private/" + path[0]));
+                    zip.file((0, node_path_1.basename)(path[0]), fs.readFileSync("./private/".concat(path[0])));
                 }
                 res.setHeader('content-disposition', 'attachment; filename=files.zip');
                 res.setHeader('content-type', 'application/zip');
@@ -257,4 +258,4 @@ app.get('*', function (req, res) {
         .status(404)
         .send('<center><h1>404 Not Found</h1><hr><p>vapour-server</p></center>');
 });
-app.listen(process.env['PORT'], function () { console.log("Online at " + process.env['PORT']); });
+app.listen(process.env['PORT'], function () { console.log("Online at ".concat(process.env['PORT'])); });

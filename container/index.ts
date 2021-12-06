@@ -24,6 +24,7 @@ app.use(express.urlencoded({ extended: false, limit: "92233720368547758071100000
 app.use(fileUpload({ debug: false }));
 
 function checkIP(intake: String) {
+    intake = intake.replace('::ffff:', '');
     ipArray = JSON.parse(process.env['IPLIST'] as string);
     switch (process.env['IPTYPE']) {
         case 'BLOCKSPECIFIC':
