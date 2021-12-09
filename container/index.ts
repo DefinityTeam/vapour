@@ -47,7 +47,7 @@ function checkIP(intake: String) {
 } 
 
 async function xForwardedFor (req: Request, res: Response, next: NextFunction) {
-    if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress as string)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
+    if (checkIP(req.header('x-forwarded-for') || req.connection.remoteAddress as string)) return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-container</p></center>');
     next();
 }
 app.get('*', xForwardedFor);
@@ -59,7 +59,7 @@ app.get('/', (req: Request, res: Response) => {
     });
 });
 
-app.get('/dashboard', (req: Request, res: Response) => { res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>'); });
+app.get('/dashboard', (req: Request, res: Response) => { res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-container</p></center>'); });
 
 app.post('/dashboard', (req: Request, res: Response) => {
     if ((process.env['LOGIN'] == sha256(req.body.username)) && (process.env['PASSWORD'] == sha256(req.body.password))) {
@@ -71,11 +71,11 @@ app.post('/dashboard', (req: Request, res: Response) => {
     }
 });
 
-app.get('/dashboard/*', (req: Request, res: Response) => { return res.status(405).send('<center><h1>405 Method Not Allowed</h1><hr><p>vapour-server</p></center>'); });
+app.get('/dashboard/*', (req: Request, res: Response) => { return res.status(405).send('<center><h1>405 Method Not Allowed</h1><hr><p>vapour-container</p></center>'); });
 
 app.post('/dashboard/:page', (req: Request, res: Response) => {
     if (!(req.body['username'] && req.body['password'] && req.body['username'].length > 2 && req.body['password'].length > 2 && sha256(req.body['username']) == process.env['LOGIN'] && sha256(req.body['password']) == process.env['PASSWORD'])) { 
-        return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
+        return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-container</p></center>');
     }
 
     switch (req.params['page']) {
@@ -102,16 +102,16 @@ app.post('/dashboard/:page', (req: Request, res: Response) => {
             break;
         case 'serviceconfig': 
             fs.readFile(`./private/accesslogs.txt`, 'utf8', (logErr, logData) => { 
-                if (logErr) { res.status(500).send('<center><h1>500 Internal Server Error</h1><hr><p>vapour-server</p></center>'); };
+                if (logErr) { res.status(500).send('<center><h1>500 Internal Server Error</h1><hr><p>vapour-container</p></center>'); };
                 fs.readFile(`./public/dashboard/serviceconfig.html`, 'utf8', (pageErr, pageData) => {
-                    if (pageErr) { res.status(500).send('<center><h1>500 Internal Server Error</h1><hr><p>vapour-server</p></center>'); }; 
+                    if (pageErr) { res.status(500).send('<center><h1>500 Internal Server Error</h1><hr><p>vapour-container</p></center>'); }; 
                     res.send(`${pageData}<script>document.getElementById('logs').value = \`${logData}\`</script>`); 
                 });
             });
             break;
         default:
             fs.access(`./public/dashboard/${req.params['page']}.html`, fs.constants.R_OK, (err) => {
-                if (err) { res.status(404).send('<center><h1>404 Not Found</h1><hr><p>vapour-server</p></center>'); };
+                if (err) { res.status(404).send('<center><h1>404 Not Found</h1><hr><p>vapour-container</p></center>'); };
                 fs.readFile(`./public/dashboard/${req.params['page']}.html`, 'utf8', (err, data) => { res.send(data); });
             });
 
@@ -119,7 +119,7 @@ app.post('/dashboard/:page', (req: Request, res: Response) => {
             // if (staticPages[req.params.page]) {
             //     res.send(staticPages[req.params.page]);
             // } else {
-            //     return res.status(404).send('<center><h1>404 Not Found</h1><hr><p>vapour-server</p></center>');
+            //     return res.status(404).send('<center><h1>404 Not Found</h1><hr><p>vapour-container</p></center>');
             // }
         
     }
@@ -157,7 +157,7 @@ app.post('/upload', (req: Request, res: Response) => {
 app.post('/remove', (req: Request, res: Response) => {
     // implement later
     // if (!(req.body['username'] && req.body['password'] && req.body['username'].length > 2 && req.body['password'].length > 2 && sha256(req.body['username']) == process.env['LOGIN'] && sha256(req.body['password']) == process.env['PASSWORD'])) { 
-    //     return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-server</p></center>');
+    //     return res.status(403).send('<center><h1>403 Forbidden</h1><hr><p>vapour-container</p></center>');
     // }
 
     for (const path of Object.entries(req.body)) {
@@ -186,7 +186,7 @@ app.post('/api/file/:file', (req: Request, res: Response) => {
 app.post('/options', (req: Request, res: Response) => {
     if (!Object.entries(req.body).length) return res
     .status(400)
-    .send('<center><h1>400 Bad Request</h1><hr><p>vapour-server</p></center>');
+    .send('<center><h1>400 Bad Request</h1><hr><p>vapour-container</p></center>');
 
     envFile = fs.readFileSync('.env', 'utf8').split('\n');
     if (req.body['ipType']) {
@@ -199,7 +199,7 @@ app.post('/options', (req: Request, res: Response) => {
                 if (!req.body['ipList']) { 
                     return res
                     .status(400)
-                    .send('<center><h1>400 Bad Request</h1><hr><p>vapour-server</p></center>'); 
+                    .send('<center><h1>400 Bad Request</h1><hr><p>vapour-container</p></center>'); 
                 }
                 process.env['IPTYPE'] = 'BLOCKSPECIFIC';
                 process.env['IPLIST'] = JSON.stringify(req.body['ipList'].split(' '));
@@ -211,7 +211,7 @@ app.post('/options', (req: Request, res: Response) => {
                 if (!req.body['ipList']) {
                     return res
                     .status(400)
-                    .send('<center><h1>400 Bad Request</h1><hr><p>vapour-server</p></center>');
+                    .send('<center><h1>400 Bad Request</h1><hr><p>vapour-container</p></center>');
                 }
                 process.env['IPTYPE'] = 'BLOCKALL';
                 process.env['IPLIST'] = JSON.stringify(req.body['ipList'].split(' '));
@@ -230,7 +230,7 @@ app.post('/options', (req: Request, res: Response) => {
         } else {
             return res
             .status(400)
-            .send('<center><h1>400 Bad Request</h1><hr><p>vapour-server</p></center>');
+            .send('<center><h1>400 Bad Request</h1><hr><p>vapour-container</p></center>');
         }
     }
 
@@ -249,7 +249,7 @@ app.post('/postAny', (req: Request, res: Response) => {
 app.get('*', (req: Request, res: Response) => {
     res
     .status(404)
-    .send('<center><h1>404 Not Found</h1><hr><p>vapour-server</p></center>');
+    .send('<center><h1>404 Not Found</h1><hr><p>vapour-container</p></center>');
 });
 
 app.listen(process.env['PORT'], () => {console.log(`Online at ${process.env['PORT']}`)});
