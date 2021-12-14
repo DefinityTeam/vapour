@@ -1,0 +1,11 @@
+container:
+- container/**/*
+
+launcher:
+- launcher/**/*
+
+website:
+- website/**/*
+
+container-no-js-recompile:
+- all: ['container/index.ts', '!container/index.js']
