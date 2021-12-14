@@ -89,17 +89,11 @@ app.post('/createContainer', async (req, res) => {
                             port = testPort;
                         }
                     }
-
-
-                    
-
                     fs.writeFileSync(`storage-container-${identifier}/.env`, `PORT=${port}\nLOGIN=${sha256.sha256(req.body.username)}\nPASSWORD=${sha256.sha256(req.body.password)}\nIPLIST=[]\nIPTYPE=ALLOWALL`);
-
                     fs.appendFileSync('createContainer.sh', `cd storage-container-${identifier}\n`);
                     fs.appendFileSync('createContainer.sh', `git clone https://github.com/DefinityTeam/vapour \n`);
                     fs.appendFileSync('createContainer.sh', `mv ./vapour/container/* . \n`);
                     fs.appendFileSync('createContainer.sh', `rm -rf vapour`)
-                    
                     fs.writeFileSync('startContainer.sh', `cd storage-container-${identifier}\n`);
                     fs.appendFileSync('startContainer.sh', `pm2 start index.js -n "storage-container-${identifier} @ ${port}"`);
 
@@ -112,12 +106,7 @@ app.post('/createContainer', async (req, res) => {
                     res.json( { type: 'success', port: port, address: `services-fr-01.definityteam.com:${port}` } );
                 }
             }
-
-            console.log('f');
-
-                      
+            console.log('finished action');                   
         });          
     }
-
-    
 });
