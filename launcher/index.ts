@@ -55,7 +55,6 @@ app.post('/createContainer', async (req, res) => {
         size.stdout.on('data', async function (data) {
             console.log('size: ' + data);
             console.log([data.toString()]);
-            //res.send('order complete: ' + data.toString().split('\t/')[0]);
             res.status(200);
             
 
@@ -68,7 +67,6 @@ app.post('/createContainer', async (req, res) => {
                     fs.readdirSync(`storage-container-${identifier}`);
                     identifier = Math.floor(Math.random() * 1000);
                 } catch(e) {
-                    // fs.writeFileSync('createContainer.sh', `mkdir storage-container-${identifier}\n`);
                     fs.writeFileSync('createContainer.sh', ``);
                     fs.mkdirSync(`storage-container-${identifier}`);
 
@@ -77,13 +75,10 @@ app.post('/createContainer', async (req, res) => {
                     while (port < 1000) {
                         
                         let testPort = Math.floor(Math.random() * 65535);
-                        //console.log(testPort);
                         try {
-                            // (async() => {
                                 await fetch('http://0.0.0.0:' + testPort, {})
                                 .then(res => res.text())
                                 .then(body => console.log(body));
-                            // })();
                         } catch(e) {
                             console.log(e);
                             port = testPort;
